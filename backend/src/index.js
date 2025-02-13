@@ -4,6 +4,9 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { connectDb } from './database/connection.js'
+import path from 'path'
+
+const __dirname = path.resolve()
 
 
 const port = process.env.PORT
@@ -31,6 +34,18 @@ app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/FormDetails', FormDetailsRoutes)
 app.use("/api/v1/State", StateMasterRoutes)
 app.use("/api/v1/FormRights", FormRightRoutes)
+
+
+
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, "../frontend/dist")))
+
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
+    })
+}
+
 
 
 // Server on
